@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import pino from 'pino';
 import pinoHttp from 'pino-http';
+import contactsRouter from './routes/contacts.js';
 
 const logger = pino();
 const pinoMiddleware = pinoHttp();
@@ -13,6 +14,9 @@ export const setupServer = () => {
   app.use(cors());
   app.use(express.json());
   app.use(pinoMiddleware);
+
+  // Routes
+  app.use('/contacts', contactsRouter);
 
   // 404 handler for undefined routes
   app.use((req, res) => {
