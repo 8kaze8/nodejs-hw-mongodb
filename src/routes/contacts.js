@@ -1,8 +1,9 @@
 import { Router } from 'express';
-import { getContacts } from '../controllers/contacts.js';
+import { getContacts, getContact } from '../controllers/contacts.js';
 
 const router = Router();
 
 router.get('/', getContacts);
+router.get('/:contactId', getContact);
 
 export default router;
