@@ -1,27 +1,35 @@
-import { getAllContacts, getContactById } from '../services/contacts.js';
+import { getAllContacts, getContactById, createContact, updateContact, deleteContact } from '../services/contacts.js';
+import { ctrlWrapper } from '../utils/ctrlWrapper.js';
 
-export const getContacts = async (req, res) => {
-  try {
-    const result = await getAllContacts();
-    res.status(result.status).json(result);
-  } catch (error) {
-    res.status(500).json({
-      status: 500,
-      message: 'Internal server error',
-      error: error.message
-    });
-  }
+const getContacts = async (req, res) => {
+  const result = await getAllContacts();
+  res.status(result.status).json(result);
 };
 
-export const getContact = async (req, res) => {
-  try {
-    const result = await getContactById(req.params.contactId);
-    res.status(result.status).json(result);
-  } catch (error) {
-    res.status(500).json({
-      status: 500,
-      message: 'Internal server error',
-      error: error.message
-    });
-  }
+const getContact = async (req, res) => {
+  const result = await getContactById(req.params.contactId);
+  res.status(result.status).json(result);
+};
+
+const addContact = async (req, res) => {
+  const result = await createContact(req.body);
+  res.status(result.status).json(result);
+};
+
+const patchContact = async (req, res) => {
+  const result = await updateContact(req.params.contactId, req.body);
+  res.status(result.status).json(result);
+};
+
+const removeContact = async (req, res) => {
+  const result = await deleteContact(req.params.contactId);
+  res.status(result.status).send();
+};
+
+export default {
+  getContacts: ctrlWrapper(getContacts),
+  getContact: ctrlWrapper(getContact),
+  addContact: ctrlWrapper(addContact),
+  patchContact: ctrlWrapper(patchContact),
+  removeContact: ctrlWrapper(removeContact)
 };
