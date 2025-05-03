@@ -75,3 +75,23 @@ export const updateContact = async (contactId, updateData) => {
     throw error;
   }
 };
+
+export const deleteContact = async (contactId) => {
+  try {
+    if (!mongoose.Types.ObjectId.isValid(contactId)) {
+      throw createError(404, 'Contact not found');
+    }
+
+    const contact = await Contact.findByIdAndDelete(contactId);
+    
+    if (!contact) {
+      throw createError(404, 'Contact not found');
+    }
+
+    return {
+      status: 204
+    };
+  } catch (error) {
+    throw error;
+  }
+};
