@@ -2,13 +2,23 @@ import { Contact } from '../db/Contact.js';
 import createError from 'http-errors';
 import mongoose from 'mongoose';
 
-export const getAllContacts = async (page = 1, perPage = 10) => {
+export const getAllContacts = async (page = 1, perPage = 10, sortBy = 'name', sortOrder = 'asc', type, isFavourite) => {
   try {
     const skip = (page - 1) * perPage;
-    const totalItems = await Contact.countDocuments();
+    
+    // Filtreleme koşullarını oluştur
+    const filter = {};
+    if (type) filter.contactType = type;
+    if (isFavourite !== undefined) filter.isFavourite = isFavourite;
+
+    const totalItems = await Contact.countDocuments(filter);
     const totalPages = Math.ceil(totalItems / perPage);
 
-    const contacts = await Contact.find({})
+    const sortOptions = {};
+    sortOptions[sortBy] = sortOrder === 'desc' ? -1 : 1;
+
+    const contacts = await Contact.find(filter)
+      .sort(sortOptions)
       .skip(skip)
       .limit(perPage);
 

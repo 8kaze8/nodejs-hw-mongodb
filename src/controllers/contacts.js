@@ -1,9 +1,20 @@
-import { getAllContacts, getContactById, createContact, updateContact, deleteContact } from '../services/contacts.js';
+import { getAllContacts, getContactById, createContact, updateContact, deleteContact } from '../services/contacts-service.js';
 import { ctrlWrapper } from '../utils/ctrlWrapper.js';
 
 const getContacts = async (req, res) => {
-  const { page = 1, perPage = 10 } = req.query;
-  const result = await getAllContacts(page, perPage);
+  const { 
+    page = 1, 
+    perPage = 10, 
+    sortBy = 'name', 
+    sortOrder = 'asc',
+    type,
+    isFavourite
+  } = req.query;
+
+  // isFavourite string olarak geliyor, boolean'a çevir
+  const isFavouriteBoolean = isFavourite === 'true' ? true : isFavourite === 'false' ? false : undefined;
+
+  const result = await getAllContacts(page, perPage, sortBy, sortOrder, type, isFavouriteBoolean);
   res.status(result.status).json(result);
 };
 
