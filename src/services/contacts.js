@@ -2,13 +2,28 @@ import { Contact } from '../db/Contact.js';
 import createError from 'http-errors';
 import mongoose from 'mongoose';
 
-export const getAllContacts = async () => {
+export const getAllContacts = async (page = 1, perPage = 10) => {
   try {
-    const contacts = await Contact.find({});
+    const skip = (page - 1) * perPage;
+    const totalItems = await Contact.countDocuments();
+    const totalPages = Math.ceil(totalItems / perPage);
+
+    const contacts = await Contact.find({})
+      .skip(skip)
+      .limit(perPage);
+
     return {
       status: 200,
       message: 'Successfully found contacts!',
-      data: contacts
+      data: {
+        data: contacts,
+        page: Number(page),
+        perPage: Number(perPage),
+        totalItems,
+        totalPages,
+        hasPreviousPage: page > 1,
+        hasNextPage: page < totalPages
+      }
     };
   } catch (error) {
     throw error;

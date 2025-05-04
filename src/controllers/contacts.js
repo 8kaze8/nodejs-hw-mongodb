@@ -2,7 +2,8 @@ import { getAllContacts, getContactById, createContact, updateContact, deleteCon
 import { ctrlWrapper } from '../utils/ctrlWrapper.js';
 
 const getContacts = async (req, res) => {
-  const result = await getAllContacts();
+  const { page = 1, perPage = 10 } = req.query;
+  const result = await getAllContacts(page, perPage);
   res.status(result.status).json(result);
 };
 
