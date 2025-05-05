@@ -25,8 +25,16 @@ const pinoMiddleware = pinoHttp({
 
 export const setupServer = () => {
   const app = express();
-  
-  // Middleware
+
+  app.use(express.json());
+  app.use(cors());
+  app.use(pinoMiddleware);
+
+  app.use('/auth', authRouter);
+  app.use('/contacts', contactsRouter);
+
+  app.use(errorHandler);
+  app.use(notFoundHandler);
 
   const PORT = process.env.PORT || 3000;
 
