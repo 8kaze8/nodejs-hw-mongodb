@@ -6,6 +6,8 @@ import contactsRouter from './routes/contacts.js';
 import authRouter from './routes/auth.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
+import swaggerUi from 'swagger-ui-express';
+import fs from 'fs';
 
 const logger = pino({
   transport: {
@@ -23,6 +25,10 @@ const pinoMiddleware = pinoHttp({
   autoLogging: process.env.NODE_ENV === 'production',
 });
 
+const swaggerDocument = JSON.parse(
+  fs.readFileSync('./docs/swagger.json', 'utf8'),
+);
+
 export const setupServer = () => {
   const app = express();
 
@@ -32,6 +38,7 @@ export const setupServer = () => {
 
   app.use('/auth', authRouter);
   app.use('/contacts', contactsRouter);
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
   app.use(errorHandler);
   app.use(notFoundHandler);

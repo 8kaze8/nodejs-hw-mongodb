@@ -1,0 +1,35 @@
+type: object
+properties:
+  _id:
+    type: string
+    example: 60d0fe4f5311236168a109ca
+  name:
+    type: string
+    example: John Doe
+  phoneNumber:
+    type: string
+    example: 5551234567
+  email:
+    type: string
+    example: johndoe@example.com
+  isFavourite:
+    type: boolean
+    example: false
+  contactType:
+    type: string
+    enum: [work, home, personal]
+    example: personal
+  photo:
+    type: string
+    example: https://res.cloudinary.com/demo/image/upload/sample.jpg
+  userId:
+    type: string
+    example: 60d0fe4f5311236168a109cb
+  createdAt:
+    type: string
+    format: date-time
+    example: 2023-01-01T00:00:00.000Z
+  updatedAt:
+    type: string
+    format: date-time
+    example: 2023-01-01T00:00:00.000Z
