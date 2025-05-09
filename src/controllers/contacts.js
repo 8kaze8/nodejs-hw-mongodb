@@ -6,6 +6,13 @@ import {
   deleteContact,
 } from '../services/contacts-service.js';
 import { ctrlWrapper } from '../utils/ctrlWrapper.js';
+import { v2 as cloudinary } from 'cloudinary';
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 const getContacts = async (req, res) => {
   const {
@@ -39,16 +46,51 @@ const getContact = async (req, res) => {
 };
 
 const addContact = async (req, res) => {
+  let photoUrl = null;
+  if (req.file) {
+    const uploadResult = await cloudinary.uploader.upload_stream(
+      { resource_type: 'image' },
+      (error, result) => {
+        if (error) throw error;
+        photoUrl = result.secure_url;
+      },
+    );
+    await new Promise((resolve, reject) => {
+      const stream = uploadResult;
+      stream.on('finish', resolve);
+      stream.on('error', reject);
+      stream.end(req.file.buffer);
+    });
+  }
   const contactData = { ...req.body, userId: req.user._id };
+  if (photoUrl) contactData.photo = photoUrl;
   const result = await createContact(contactData);
   res.status(result.status).json(result);
 };
 
 const patchContact = async (req, res) => {
+  let photoUrl = null;
+  if (req.file) {
+    const uploadResult = await cloudinary.uploader.upload_stream(
+      { resource_type: 'image' },
+      (error, result) => {
+        if (error) throw error;
+        photoUrl = result.secure_url;
+      },
+    );
+    await new Promise((resolve, reject) => {
+      const stream = uploadResult;
+      stream.on('finish', resolve);
+      stream.on('error', reject);
+      stream.end(req.file.buffer);
+    });
+  }
+  const updateData = { ...req.body };
+  if (photoUrl) updateData.photo = photoUrl;
   const result = await updateContact(
     req.user._id,
     req.params.contactId,
-    req.body,
+    updateData,
   );
   res.status(result.status).json(result);
 };
