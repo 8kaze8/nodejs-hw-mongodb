@@ -1,0 +1,27 @@
+openapi: 3.1.0
+info:
+  version: 1.0.0
+  title: Node.js HW API
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  description: |
+    Node.js kursu için örnek API dokümantasyonu.
+tags:
+  - name: Auth
+    description: Kimlik doğrulama işlemleri
+  - name: Contacts
+    description: Kişi yönetimi
+servers:
+  - url: http://localhost:3000
+  - url: https://<yayınlanmış-site-linki>
+paths:
+  /contacts:
+    $ref: ../swagger/paths/contacts.yaml
+  /contacts/{contactId}:
+    $ref: ../swagger/paths/contacts_{id}.yaml
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer

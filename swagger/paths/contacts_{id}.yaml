@@ -1,0 +1,125 @@
+get:
+  tags:
+    - Contacts
+  summary: Get a contact by ID
+  operationId: getContactById
+  description: Retrieve a single contact by its unique ID.
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: contactId
+      in: path
+      required: true
+      description: The unique identifier of the contact
+      schema:
+        type: string
+  responses:
+    '200':
+      description: Successfully found contact with id
+      content:
+        application/json:
+          schema:
+            $ref: '../../swagger/components/contact.yaml'
+    '404':
+      description: Contact not found
+      content:
+        application/json:
+          schema:
+            $ref: '../../swagger/components/error.yaml'
+patch:
+  tags:
+    - Contacts
+  summary: Update a contact by ID
+  operationId: updateContact
+  description: Update an existing contact by its unique ID. Supports photo upload.
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: contactId
+      in: path
+      required: true
+      description: The unique identifier of the contact
+      schema:
+        type: string
+  requestBody:
+    required: false
+    content:
+      multipart/form-data:
+        schema:
+          type: object
+          properties:
+            name:
+              type: string
+              example: John Doe
+            phoneNumber:
+              type: string
+              example: 5551234567
+            email:
+              type: string
+              example: johndoe@example.com
+            isFavourite:
+              type: boolean
+              example: false
+            contactType:
+              type: string
+              enum: [work, home, personal]
+              example: personal
+            photo:
+              type: string
+              format: binary
+              description: Contact photo file
+  responses:
+    '200':
+      description: Successfully patched a contact
+      content:
+        application/json:
+          schema:
+            $ref: '../../swagger/components/contact.yaml'
+    '400':
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            $ref: '../../swagger/components/error.yaml'
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '../../swagger/components/error.yaml'
+    '404':
+      description: Contact not found
+      content:
+        application/json:
+          schema:
+            $ref: '../../swagger/components/error.yaml'
+delete:
+  tags:
+    - Contacts
+  summary: Delete a contact by ID
+  operationId: deleteContact
+  description: Delete an existing contact by its unique ID.
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: contactId
+      in: path
+      required: true
+      description: The unique identifier of the contact
+      schema:
+        type: string
+  responses:
+    '204':
+      description: Successfully deleted contact (no content)
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '../../swagger/components/error.yaml'
+    '404':
+      description: Contact not found
+      content:
+        application/json:
+          schema:
+            $ref: '../../swagger/components/error.yaml'
