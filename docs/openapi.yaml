@@ -17,17 +17,9 @@ servers:
   - url: https://<yayınlanmış-site-linki>
 paths:
   /contacts:
-    get:
-      $ref: ../swagger/paths/contacts/get.yaml#get
-    post:
-      $ref: ../swagger/paths/contacts/post.yaml#post
+    $ref: ../swagger/paths/contacts.yaml
   /contacts/{contactId}:
-    get:
-      $ref: ../swagger/paths/contacts/{id}/get.yaml#get
-    patch:
-      $ref: ../swagger/paths/contacts/{id}/patch.yaml#patch
-    delete:
-      $ref: ../swagger/paths/contacts/{id}/delete.yaml#delete
+    $ref: ../swagger/paths/contacts_{id}.yaml
 components:
   securitySchemes:
     bearerAuth:
